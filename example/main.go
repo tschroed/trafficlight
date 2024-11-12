@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"ryanairship.com/trafficlight/k8090"
+	"github.com/tschroed/trafficlight/k8090"
 )
 
 func check(err error) {
@@ -24,6 +24,6 @@ func main() {
 		n, err := strconv.Atoi(arg)
 		check(err)
 		k.Set(uint8(n))
-		time.Sleep(time.Duration(s) * time.Second)
+		time.Sleep(time.Duration(s) * time.Millisecond)
 	}
 }

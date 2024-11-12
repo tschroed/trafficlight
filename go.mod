@@ -1,1 +1,1 @@
-module ryanairship.com/trafficlight
+module github.com/tschroed/trafficlight

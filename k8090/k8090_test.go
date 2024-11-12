@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	tl "ryanairship.com/trafficlight"
+	tl "github.com/tschroed/trafficlight"
 )
 
 func TestCsum(t *testing.T) {
