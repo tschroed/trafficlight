@@ -1,0 +1,42 @@
+Hardware introduction and description
+Board size: 76.9 x 80.6mm
+Board Interface Description:
+COM1: common;
+NC1: normally closed;
+NO1: normally open.
+.........
+COM8: common;
+NC8: normally closed;
+NO8: normally open.
+
+Communication protocol description:
+Default communication baud rate: 9600BPS
+Turn on the 1-channel relay switch: A0 01 01 A2
+Turn off the 1-channel relay switch: A0 01 00 A1
+Turn on the 2-channel relay switch: A0 02 01 A3
+Turn off the 2-channel relay switch: A0 02 00 A2
+Turn on the 3-channel relay switch: A0 03 01 A4
+Turn off the 3-channel relay switch: A0 03 00 A3
+......
+Turn on the 8-channel relay switch: A0 08 01 A9
+Turn off the 8-channel relay switch: A0 08 00 A8
+Relay ON/OFF status query command: 0xFF
+
+USB switch communication protocol
+Data (1) --- start flag (default is 0xA0)
+Data (2) --- switch address codes (0x01 and 0x02 represent the first and second switches, respectively)
+Data (3) --- operating data (0x00 is "off", 0x01 is "on")
+Data (4) --- check code
+
+Usage Description:
+1. Connect the USB relay module to the computer and install the CH340 USB to serial chip driver
+2. Open the STC-ISP, SSCOM32 such serial debugging software, select the baud rate of 9600, in hexadecimal (hex) form send A0 01 01 A2 and A0 02 01 A3 can be opened the first and second relay ; Send in hexadecimal (hex) A0 01 00 A1 and A0 02 00 A2 can be turned off the first and second relay, respectively.
+
+Relay status obtain: Send FF in hexadecimal (HEX) to query.
+For example, if the 1st, 2nd, 3rd, and 4th relays are open, and the 5th, 6th, 7th, and 8th relays are closed, inputting FF (HEX) to obtain the relay status will return the following data: 01 01 01 01 00 00 00 00.
+01 means the relay is open.
+00 means the relay is closed.
+
+
+Package Included:
+1pcs NOYITO 8-Channel Micro USB Relay Module
