@@ -2,6 +2,7 @@ package k8090
 
 import (
 	"bytes"
+	"errors"
 	"reflect"
 	"testing"
 
@@ -9,24 +10,24 @@ import (
 )
 
 func TestCsum(t *testing.T) {
-	cases := []struct{
-		val uint8
+	cases := []struct {
+		val  uint8
 		want uint8
 	}{
 		{
-			val: 0x04 + 0x12 + 0x00,
+			val:  0x04 + 0x12 + 0x00,
 			want: 0xea,
 		},
 		{
-			val: 0x04 + 0x11 + 0x07,
+			val:  0x04 + 0x11 + 0x07,
 			want: 0xe4,
 		},
 		{
-			val: 0x04 + 0x11 + 0x03,
+			val:  0x04 + 0x11 + 0x03,
 			want: 0xe8,
 		},
 		{
-			val: 0x04 + 0x11 + 0x00,
+			val:  0x04 + 0x11 + 0x00,
 			want: 0xeb,
 		},
 	}
@@ -41,12 +42,12 @@ func TestCsum(t *testing.T) {
 func TestSet(t *testing.T) {
 	var b bytes.Buffer
 	k := new(&b)
-	cases := []struct{
+	cases := []struct {
 		word uint8
 	}{
-		{ word: 0, },
-		{ word: 7, },
-		{ word: 255, },
+		{word: 0},
+		{word: 7},
+		{word: 255},
 	}
 	all := uint8(0xff)
 	for _, tc := range cases {
@@ -78,5 +79,32 @@ func TestNew(t *testing.T) {
 	}
 	if _, ok := k.(tl.TrafficLight); !ok {
 		t.Error("k is not a TrafficLight")
+	}
+}
+
+type errWriter struct{
+	failAfter int
+}
+
+func (w *errWriter) Write(p []byte) (n int, err error) {
+	if w.failAfter <= 0 {
+		return -1, errors.New("This is an error.")
+	}
+	w.failAfter--
+	return len(p), nil
+}
+
+func TestSetError(t *testing.T) {
+	k := new(&errWriter{})
+	if err := k.Set(3); err == nil {
+		t.Error("Expected error, got none.")
+	}
+	k = new(&errWriter{failAfter: 1})
+	if err := k.Set(3); err == nil {
+		t.Error("Expected error, got none.")
+	}
+	k = new(&errWriter{failAfter: 2})
+	if err := k.Set(3); err != nil {
+		t.Errorf("Unexpected error: %v", err)
 	}
 }

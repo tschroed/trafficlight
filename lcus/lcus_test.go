@@ -2,6 +2,7 @@ package lcus
 
 import (
 	"bytes"
+	"errors"
 	"reflect"
 	"testing"
 
@@ -10,15 +11,15 @@ import (
 
 func TestSet(t *testing.T) {
 	var b bytes.Buffer
-	k := new(&b)
-	cases := []struct{
-		word uint8
+	l := new(&b)
+	cases := []struct {
+		word  uint8
 		bytes []byte
 	}{{
-		word: 0,
+		word:  0,
 		bytes: []byte{},
 	}, {
-		word: 2,
+		word:  2,
 		bytes: []byte{0xa0, 0x02, 0x01, 0xa3},
 	}, {
 		word: 7,
@@ -41,11 +42,11 @@ func TestSet(t *testing.T) {
 			0xa0, 0x02, 0x00, 0xa2,
 			0xa0, 0x03, 0x00, 0xa3,
 		}, tc.bytes...)
-		if err := k.Set(tc.word); err != nil {
+		if err := l.Set(tc.word); err != nil {
 			t.Error(err)
 		}
 		if !reflect.DeepEqual(b.Bytes(), want) {
-			t.Errorf("k.Set(%v) = %v, want %v", tc.word, b.Bytes(), want)
+			t.Errorf("l.Set(%v) = %v, want %v", tc.word, b.Bytes(), want)
 		}
 		b.Reset()
 	}
@@ -53,17 +54,30 @@ func TestSet(t *testing.T) {
 
 func TestNew(t *testing.T) {
 	// Do this to enforce interface implementation.
-	var k tl.TrafficLight
+	var l tl.TrafficLight
 	var err error
 	fn := "/file/does/not/exist"
 	if _, err = New(fn); err == nil {
 		t.Errorf("New(%v) got nil, wanted error", fn)
 	}
 	fn = "/dev/null"
-	if k, err = New(fn); err != nil {
+	if l, err = New(fn); err != nil {
 		t.Errorf("New(%v) got %v, wanted nil", fn, err)
 	}
-	if _, ok := k.(tl.TrafficLight); !ok {
+	if _, ok := l.(tl.TrafficLight); !ok {
 		t.Error("k is not a TrafficLight")
+	}
+}
+
+type errWriter struct{}
+
+func (w *errWriter) Write(p []byte) (n int, err error) {
+	return -1, errors.New("This is an error.")
+}
+
+func TestSetError(t *testing.T) {
+	l := new(&errWriter{})
+	if err := l.Set(3); err == nil {
+		t.Error("Expected error, got none.")
 	}
 }
