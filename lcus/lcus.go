@@ -12,10 +12,6 @@ type LCUS struct {
 	port io.Writer
 }
 
-func csum(n uint8) uint8 {
-	return (n ^ 255) + 1
-}
-
 func (l *LCUS) Set(word uint8) error {
 	// Everything off to start with.
 	b := [][]byte{
