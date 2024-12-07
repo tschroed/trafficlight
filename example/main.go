@@ -1,9 +1,9 @@
 package main
 
 import (
+	"flag"
 	"strconv"
 	"time"
-	"flag"
 
 	"github.com/tschroed/trafficlight"
 	"github.com/tschroed/trafficlight/k8090"
