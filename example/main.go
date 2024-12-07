@@ -27,6 +27,8 @@ func main() {
 		tl, err = k8090.New("/dev/ttyACM0")
 	case "lcus":
 		tl, err = lcus.New("/dev/ttyUSB0")
+	default:
+		panic("Unknown driver: " + *dFlag)
 	}
 	check(err)
 	defer tl.Set(0)
