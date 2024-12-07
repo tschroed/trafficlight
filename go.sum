@@ -1,0 +1,3 @@
+github.com/ziutek/ftdi v0.0.1 h1:IrFtqLisIzEfgSnuLg1suZYLkn227DTyE464XswAGK4=
+github.com/ziutek/ftdi v0.0.1/go.mod h1:fUzQhjslJJSlwoMW5Cd+0RUc8KuMDfsuZB+wfJAz1eg=
+github.com/ziutek/lcd v0.0.0-20141212131202-924f223d0903/go.mod h1:ZBCPhfHIcCtzsrXIcyEiSPDKHrjT9fXtJNKj2t1HCKw=
